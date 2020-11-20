@@ -72,13 +72,34 @@ print('voting')
 eclf.fit(X_train, Y_train)
 
 #fazer a verificação com cada um dos modelos também                  
+
+predictions = clf1.predict(X_validation);                      
+print(accuracy_score(Y_validation, predictions));             
+print(confusion_matrix(Y_validation, predictions));           
+print(classification_report(Y_validation, predictions));      
+print("Validando com DecisionTreeClassifier");
+print(predictions); 
+
+predictions = clf2.predict(X_validation);                      
+print(accuracy_score(Y_validation, predictions));             
+print(confusion_matrix(Y_validation, predictions));           
+print(classification_report(Y_validation, predictions));      
+print("Validando com KNeighborsClassifier");
+print(predictions); 
+
+predictions = clf3.predict(X_validation);                      
+print(accuracy_score(Y_validation, predictions));             
+print(confusion_matrix(Y_validation, predictions));           
+print(classification_report(Y_validation, predictions));      
+print("Validando com RandomForestClassifier");
+print(predictions); 
+
 predictions = eclf.predict(X_validation);                      
 print(accuracy_score(Y_validation, predictions));             
 print(confusion_matrix(Y_validation, predictions));           
 print(classification_report(Y_validation, predictions));      
-print("X_validation predict ===");
+print("Validando com voting");
 print(predictions); 
-
 #votingClassifier
 
 
