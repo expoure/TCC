@@ -48,8 +48,8 @@ print(concatened_dataset.groupby('Label').mean());
 
 array = concatened_dataset.values
 # print(array)
-x = array[:,0:21]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
-y = array[:,21]          # list slice for class column
+x = array[:,0:23]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
+y = array[:,23]          # list slice for class column
 
 X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(x, y, test_size=0.25, random_state=0)
 
@@ -73,32 +73,32 @@ eclf.fit(X_train, Y_train)
 
 #fazer a verificação com cada um dos modelos também                  
 
+print("Validando com DecisionTreeClassifier");
 predictions = clf1.predict(X_validation);                      
 print(accuracy_score(Y_validation, predictions));             
 print(confusion_matrix(Y_validation, predictions));           
 print(classification_report(Y_validation, predictions));      
-print("Validando com DecisionTreeClassifier");
 print(predictions); 
 
+print("Validando com KNeighborsClassifier");
 predictions = clf2.predict(X_validation);                      
 print(accuracy_score(Y_validation, predictions));             
 print(confusion_matrix(Y_validation, predictions));           
 print(classification_report(Y_validation, predictions));      
-print("Validando com KNeighborsClassifier");
 print(predictions); 
 
+print("Validando com RandomForestClassifier");
 predictions = clf3.predict(X_validation);                      
 print(accuracy_score(Y_validation, predictions));             
 print(confusion_matrix(Y_validation, predictions));           
 print(classification_report(Y_validation, predictions));      
-print("Validando com RandomForestClassifier");
 print(predictions); 
 
+print("Validando com voting");
 predictions = eclf.predict(X_validation);                      
 print(accuracy_score(Y_validation, predictions));             
 print(confusion_matrix(Y_validation, predictions));           
 print(classification_report(Y_validation, predictions));      
-print("Validando com voting");
 print(predictions); 
 #votingClassifier
 

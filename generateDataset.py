@@ -67,7 +67,13 @@ def concatenedToCsv():
     concatened_pearToPear = pd.concat(pearToPear)
     concatened_pearToPear.Label = '6'
 
-    concatened_dataframe = [concatened_streaming, concatened_voip, concatened_chat, concatened_file_transfer, concatened_email, concatened_pearToPear]
+    # Garbage
+    garbage = openGroupCsv.getAllCsvType('garbage')
+    garbage = [garbage]
+    concatened_garbage = pd.concat(garbage)
+    concatened_garbage.Label = '7'
+
+    concatened_dataframe = [concatened_streaming, concatened_voip, concatened_chat, concatened_file_transfer, concatened_email, concatened_pearToPear, concatened_garbage]
     concatened_dataset = pd.concat(concatened_dataframe)
 
     concatened_dataset = concatened_dataset[
@@ -92,8 +98,8 @@ def concatenedToCsv():
             'Active Max', 
             'Active Std', #importante?
             'Idle Min', # importante?
-            # 'Idle Mean', #importante?
-            # 'Idle Max', #importante?
+            'Idle Mean', #importante?
+            'Idle Max', #importante?
             'Idle Std', 
             'Label'
         ]
