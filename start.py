@@ -103,6 +103,8 @@ print(predictions);
 #votingClassifier
 
 
+# FAZER VÁRIAS IMAGENS PLT
+
 # validation_size = 0.20  # 20% for the validation set
 # seed = 7
 
