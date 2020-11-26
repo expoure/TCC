@@ -3,13 +3,13 @@ import pandas as pd
 
 def concatenedToCsv():
     print('Starting generate concatened_dataset')
-    # 0 = WEB
     # 1 = EMAIL
     # 2 = CHAT
     # 3 = STREAMING
     # 4 = FILE TRANSFER
     # 5 = VOIP
     # 6 = P2P
+    # 7 = GARBAGE
 
     #streaming
     vimeo = openGroupCsv.getAllCsvType('vimeo')
@@ -107,5 +107,22 @@ def concatenedToCsv():
 
     print('cleaning dataset')
     concatened_dataset.dropna(inplace=True) # remove all inf and nan from datagrame
+
+    #ISSO AQUI PODE SERVIR COMO ARGUMENTAÇÃO PARA AS COLUNAS ESCOLHIDAS
+    minLabels = concatened_dataset.groupby('Label').min()
+    meanLabels = concatened_dataset.groupby('Label').mean()
+    medianLabels = concatened_dataset.groupby('Label').median()
+    maxLabels = concatened_dataset.groupby('Label').max()
+    stdLabels = concatened_dataset.groupby('Label').std()
+
+    print('saving statistics')
+    minLabels.to_csv(r'statistics/min.csv', index = False, decimal='.')
+    meanLabels.to_csv(r'statistics/mean.csv', index = False, decimal='.')
+    medianLabels.to_csv(r'statistics/median.csv', index = False, decimal='.')
+    maxLabels.to_csv(r'statistics/max.csv', index = False, decimal='.')
+    stdLabels.to_csv(r'statistics/std.csv', index = False, decimal='.')
+
     concatened_dataset.to_csv('concatened_dataset.csv', index = False, decimal='.')
     print('generate concatened_dataset has been finished')
+
+    print('SEPARAR PORÇÃO DOS DATASETS PARA A VALIDAÇÃO')

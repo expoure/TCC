@@ -38,13 +38,6 @@ concatened_dataset = pd.read_csv('concatened_dataset.csv')
 
 print("=============================================================================================")
 
-#3.4 class distribution
-# print(concatened_dataset.groupby('Label').size()); # group the instances based on a specified column and get the size.
-print(concatened_dataset.groupby('Label').mean());
-
-#ISSO AQUI PODE SERVIR COMO ARGUMENTAÇÃO PARA AS COLUNAS ESCOLHIDAS
-# mean = concatened_dataset.groupby('Label').mean()
-# mean.to_csv(r'mean.csv', index = False, decimal='.')
 
 array = concatened_dataset.values
 # print(array)
@@ -100,6 +93,10 @@ print(accuracy_score(Y_validation, predictions));
 print(confusion_matrix(Y_validation, predictions));           
 print(classification_report(Y_validation, predictions));      
 print(predictions); 
+
+
+# # Compare Algorithms
+# https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_probas.html
 #votingClassifier
 
 
