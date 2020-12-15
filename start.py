@@ -11,7 +11,7 @@ import rampwf as rw
 from sklearn.model_selection import StratifiedShuffleSplit
 import matplotlib.pyplot as plt
 from sklearn import model_selection
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, plot_confusion_matrix
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -48,51 +48,64 @@ X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(
 
 #votingClassifier
 
-clf1 = DecisionTreeClassifier(max_depth=4)
-clf2 = KNeighborsClassifier(n_neighbors=7)
-clf3 = RandomForestClassifier(n_estimators=4)
-eclf = VotingClassifier(estimators=[('dt', clf1), ('knn', clf2),
-                                    ('rf', clf3)],
-                        voting='soft', weights=[1, 2, 1])
+decisionTree = DecisionTreeClassifier(max_depth=4)
+knn = KNeighborsClassifier(n_neighbors=7)
+randomForest = RandomForestClassifier(n_estimators=4)
+votingClassifier = VotingClassifier(
+    estimators=[
+        ('dt', decisionTree),
+        ('knn', knn),
+        ('rf', randomForest)
+    ],
+    voting='soft', weights=[1, 2, 1]
+)
 
 print('treinando 1')
-clf1.fit(X_train, Y_train)
+decisionTree.fit(X_train, Y_train)
 print('treinando 2')
-clf2.fit(X_train, Y_train)
+knn.fit(X_train, Y_train)
 print('treinando 3')
-clf3.fit(X_train, Y_train)
+randomForest.fit(X_train, Y_train)
 print('voting')
-eclf.fit(X_train, Y_train)
+votingClassifier.fit(X_train, Y_train)
 
-#fazer a verificação com cada um dos modelos também                  
+#fazer a verificação com cada um dos modelos também
 
-print("Validando com DecisionTreeClassifier");
-predictions = clf1.predict(X_validation);                      
-print(accuracy_score(Y_validation, predictions));             
-print(confusion_matrix(Y_validation, predictions));           
-print(classification_report(Y_validation, predictions));      
-print(predictions); 
+print("Validando com DecisionTreeClassifier")
+predictions = decisionTree.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+print(confusion_matrix(Y_validation, predictions))
+plot_confusion_matrix(decisionTree, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+print(predictions)
 
-print("Validando com KNeighborsClassifier");
-predictions = clf2.predict(X_validation);                      
-print(accuracy_score(Y_validation, predictions));             
-print(confusion_matrix(Y_validation, predictions));           
-print(classification_report(Y_validation, predictions));      
-print(predictions); 
+print("Validando com KNeighborsClassifier")
+predictions = knn.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+print(confusion_matrix(Y_validation, predictions))
+plot_confusion_matrix(knn, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+print(predictions)
 
-print("Validando com RandomForestClassifier");
-predictions = clf3.predict(X_validation);                      
-print(accuracy_score(Y_validation, predictions));             
-print(confusion_matrix(Y_validation, predictions));           
-print(classification_report(Y_validation, predictions));      
-print(predictions); 
+print("Validando com RandomForestClassifier")
+predictions = randomForest.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+print(confusion_matrix(Y_validation, predictions))
+plot_confusion_matrix(randomForest, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+print(predictions)
 
-print("Validando com voting");
-predictions = eclf.predict(X_validation);                      
-print(accuracy_score(Y_validation, predictions));             
-print(confusion_matrix(Y_validation, predictions));           
-print(classification_report(Y_validation, predictions));      
-print(predictions); 
+print("Validando com voting")
+predictions = votingClassifier.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+print(confusion_matrix(Y_validation, predictions))
+plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
+plt.show()
+print(classification_report(Y_validation, predictions))
+print(predictions)
 
 
 # # Compare Algorithms
@@ -156,7 +169,7 @@ print(predictions);
 # 	print(cv_results);
 # 	print(msg)
 
-	
+
 # # Compare Algorithms
 # # fig = plt.figure()
 # # fig.suptitle('Algorithm Comparison')
@@ -177,14 +190,14 @@ print(predictions);
 # print(predictions);                                             # array of predicted values
 
 # print("Predicting on unseen data with RF");
-# rf = RandomForestClassifier();                                 
-# rf.fit(X_train, Y_train);                                    
-# predictions = rf.predict(X_validation);                      
-# print(accuracy_score(Y_validation, predictions));             
-# print(confusion_matrix(Y_validation, predictions));           
-# print(classification_report(Y_validation, predictions));      
+# rf = RandomForestClassifier();
+# rf.fit(X_train, Y_train);
+# predictions = rf.predict(X_validation);
+# print(accuracy_score(Y_validation, predictions));
+# print(confusion_matrix(Y_validation, predictions));
+# print(classification_report(Y_validation, predictions));
 # print("X_validation predict ===");
-# print(predictions); 
+# print(predictions);
 #TERMINA AQUI COMO ESTAVA ANTES DE TESTAR O VOTING
 
 # for row_index, (input, predictions, Y_validation) in enumerate(zip (X_validation, predictions, Y_validation)):
@@ -195,29 +208,29 @@ print(predictions);
 # pop = pd.read_csv('data/daily/2020-10-09_Flow.csv')
 # pop = pop[
 #     [
-#         'Flow Duration', 
-#         'Fwd IAT Total', 
-#         'Bwd IAT Total', 
-#         'Fwd IAT Min', 
-#         'Bwd IAT Min', 
-#         'Fwd IAT Max', 
-#         'Bwd IAT Max', 
-#         'Fwd IAT Mean', 
-#         'Bwd IAT Mean', 
+#         'Flow Duration',
+#         'Fwd IAT Total',
+#         'Bwd IAT Total',
+#         'Fwd IAT Min',
+#         'Bwd IAT Min',
+#         'Fwd IAT Max',
+#         'Bwd IAT Max',
+#         'Fwd IAT Mean',
+#         'Bwd IAT Mean',
 #         'Flow Packets/s',
 #         'Flow Bytes/s',
 #         'Flow IAT Min',
-#         'Flow IAT Max', 
-#         'Flow IAT Mean', 
-#         'Flow IAT Std', 
+#         'Flow IAT Max',
+#         'Flow IAT Mean',
+#         'Flow IAT Std',
 #         'Active Min',
-#         'Active Mean', 
-#         'Active Max', 
-#         'Active Std', 
+#         'Active Mean',
+#         'Active Max',
+#         'Active Std',
 #         'Idle Min',
-#         'Idle Mean', 
-#         'Idle Max', 
-#         'Idle Std', 
+#         'Idle Mean',
+#         'Idle Max',
+#         'Idle Std',
 #     ]
 # ].copy()
 
