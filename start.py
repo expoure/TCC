@@ -31,17 +31,19 @@ from sklearn.model_selection import train_test_split
 # TALVEZ SE TORNE NECESSÁRIO FAZER UM TRATAMENTO DESSE CSV, EXCLUINDO AS COLUNAS
 # DESNECESSÁRIAS, MUDANDO O LABEL ETC
 
+# if os.path.isfile('concatened_dataset.csv'):
+#     concatened_dataset = pd.read_csv('concatened_dataset.csv')
+# else:
 generateDataset.concatenedToCsv()
 concatened_dataset = pd.read_csv('concatened_dataset.csv')
-# print(concatened_dataset.dtypes);                  #Types of each attribute.
-# print(concatened_dataset['Label'].unique());       #Unique values for the specified attribute.
+
 
 print("=============================================================================================")
 
 
 array = concatened_dataset.values
 # print(array)
-x = array[:,0:23]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
+x = array[:,0:22]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
 y = array[:,23]          # list slice for class column
 
 X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(x, y, test_size=0.25, random_state=0)
@@ -74,8 +76,7 @@ votingClassifier.fit(X_train, Y_train)
 print("Validando com DecisionTreeClassifier")
 predictions = decisionTree.predict(X_validation)
 print(accuracy_score(Y_validation, predictions))
-print(confusion_matrix(Y_validation, predictions))
-plot_confusion_matrix(decisionTree, X_validation, Y_validation)
+# plot_confusion_matrix(decisionTree, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
 print(predictions)
@@ -83,8 +84,7 @@ print(predictions)
 print("Validando com KNeighborsClassifier")
 predictions = knn.predict(X_validation)
 print(accuracy_score(Y_validation, predictions))
-print(confusion_matrix(Y_validation, predictions))
-plot_confusion_matrix(knn, X_validation, Y_validation)
+# plot_confusion_matrix(knn, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
 print(predictions)
@@ -92,8 +92,7 @@ print(predictions)
 print("Validando com RandomForestClassifier")
 predictions = randomForest.predict(X_validation)
 print(accuracy_score(Y_validation, predictions))
-print(confusion_matrix(Y_validation, predictions))
-plot_confusion_matrix(randomForest, X_validation, Y_validation)
+# plot_confusion_matrix(randomForest, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
 print(predictions)
@@ -101,7 +100,6 @@ print(predictions)
 print("Validando com voting")
 predictions = votingClassifier.predict(X_validation)
 print(accuracy_score(Y_validation, predictions))
-print(confusion_matrix(Y_validation, predictions))
 plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
 plt.show()
 print(classification_report(Y_validation, predictions))
