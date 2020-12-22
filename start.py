@@ -43,7 +43,7 @@ print("=========================================================================
 
 array = concatened_dataset.values
 # print(array)
-x = array[:,0:22]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
+x = array[:,0:23]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
 y = array[:,23]          # list slice for class column
 
 X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(x, y, test_size=0.25, random_state=0)
@@ -104,7 +104,6 @@ plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
 plt.show()
 print(classification_report(Y_validation, predictions))
 print(predictions)
-
 
 # # Compare Algorithms
 # https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_probas.html

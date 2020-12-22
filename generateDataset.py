@@ -1,5 +1,6 @@
 import openGroupCsv
 import pandas as pd
+from sklearn.utils import shuffle
 
 def concatenedToCsv():
     print('Starting generate concatened_dataset')
@@ -21,6 +22,7 @@ def concatenedToCsv():
     streaming = [vimeo, youtube, spotify, netflix, facebook_video]
     concatened_streaming = pd.concat(streaming)
     concatened_streaming.Label = '3'
+    concatened_streaming = shuffle(concatened_streaming)
 
     #chat
     facebook_chat = openGroupCsv.getAllCsvType('facebook_chat')
@@ -32,6 +34,7 @@ def concatenedToCsv():
     chat = [facebook_chat, hangouts_chat, skype_chat, aim_chat, icq_chat]
     concatened_chat = pd.concat(chat)
     concatened_chat.Label = '2'
+    concatened_chat = shuffle(concatened_chat)
 
     #voip
     skype_audio = openGroupCsv.getAllCsvType('skype_audio')
@@ -42,6 +45,7 @@ def concatenedToCsv():
     voip = [skype_audio, facebook_audio, hangouts_audio, voipbuster]
     concatened_voip = pd.concat(voip)
     concatened_voip.Label = '5'
+    concatened_voip = shuffle(concatened_voip)
 
     # email
     email = openGroupCsv.getAllCsvType('email')
@@ -49,6 +53,7 @@ def concatenedToCsv():
     email = [email]
     concatened_email = pd.concat(email)
     concatened_email.Label = '1'
+    concatened_email = shuffle(concatened_email)
 
     # file transfer
     skype_file = openGroupCsv.getAllCsvType('skype_file')
@@ -59,6 +64,7 @@ def concatenedToCsv():
     file_transfer = [skype_file, ftps, sftp, scp]
     concatened_file_transfer = pd.concat(file_transfer)
     concatened_file_transfer.Label = '4'
+    concatened_file_transfer = shuffle(concatened_file_transfer)
 
     # P2P
     vpn_bittorrent = openGroupCsv.getAllCsvType('vpn_bittorrent')
@@ -66,12 +72,24 @@ def concatenedToCsv():
     pearToPear = [vpn_bittorrent, torrent]
     concatened_pearToPear = pd.concat(pearToPear)
     concatened_pearToPear.Label = '6'
+    concatened_pearToPear = shuffle(concatened_pearToPear)
 
     # Garbage
     garbage = openGroupCsv.getAllCsvType('garbage')
     garbage = [garbage]
     concatened_garbage = pd.concat(garbage)
     concatened_garbage.Label = '7'
+    concatened_garbage = shuffle(concatened_garbage)
+
+    ## SEPARANDO PARA VALIDAÇÃO
+    print('concatened_streaming', len(concatened_streaming.index))
+    print('concatened_voip', len(concatened_voip.index))
+    print('concatened_chat', len(concatened_chat.index))
+    print('concatened_file_transfer', len(concatened_file_transfer.index))
+    print('concatened_email', len(concatened_email.index))
+    print('concatened_pearToPear', len(concatened_pearToPear.index))
+    print('concatened_garbage', len(concatened_garbage.index))
+    ##
 
     concatened_dataframe = [concatened_streaming, concatened_voip, concatened_chat, concatened_file_transfer, concatened_email, concatened_pearToPear, concatened_garbage]
     concatened_dataset = pd.concat(concatened_dataframe)
@@ -118,5 +136,3 @@ def concatenedToCsv():
 
     concatened_dataset.to_csv('concatened_dataset.csv', index = False, decimal='.')
     print('generate concatened_dataset has been finished')
-
-    print('SEPARAR PORÇÃO DOS DATASETS PARA A VALIDAÇÃO')
