@@ -79,7 +79,6 @@ print(accuracy_score(Y_validation, predictions))
 # plot_confusion_matrix(decisionTree, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
-print(predictions)
 
 print("Validando com KNeighborsClassifier")
 predictions = knn.predict(X_validation)
@@ -87,7 +86,6 @@ print(accuracy_score(Y_validation, predictions))
 # plot_confusion_matrix(knn, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
-print(predictions)
 
 print("Validando com RandomForestClassifier")
 predictions = randomForest.predict(X_validation)
@@ -95,15 +93,13 @@ print(accuracy_score(Y_validation, predictions))
 # plot_confusion_matrix(randomForest, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
-print(predictions)
 
 print("Validando com voting")
 predictions = votingClassifier.predict(X_validation)
 print(accuracy_score(Y_validation, predictions))
-plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
-plt.show()
+# plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
+# plt.show()
 print(classification_report(Y_validation, predictions))
-print(predictions)
 
 # # Compare Algorithms
 # https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_probas.html
