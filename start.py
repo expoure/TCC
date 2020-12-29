@@ -19,6 +19,8 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
+from collections import Counter
+from joblib import dump, load
 
 
 # CRIAR SCRIPT PARA INSTALAR TODOS OS PRÉ-REQUISITOS COMO PANDAS, KERAS, SCIKIT ETC
@@ -31,11 +33,12 @@ from sklearn.model_selection import train_test_split
 # TALVEZ SE TORNE NECESSÁRIO FAZER UM TRATAMENTO DESSE CSV, EXCLUINDO AS COLUNAS
 # DESNECESSÁRIAS, MUDANDO O LABEL ETC
 
-# if os.path.isfile('concatened_dataset.csv'):
-#     concatened_dataset = pd.read_csv('concatened_dataset.csv')
-# else:
-generateDataset.concatenedToCsv()
-concatened_dataset = pd.read_csv('concatened_dataset.csv')
+if (os.path.isfile('concatened_dataset.csv') & os.path.isfile('validate_dataset.csv') ):
+    concatened_dataset = pd.read_csv('concatened_dataset.csv')
+    validate_dataset = pd.read_csv('validate_dataset.csv')
+else:
+    generateDataset.concatenedToCsv()
+    concatened_dataset = pd.read_csv('concatened_dataset.csv')
 
 
 print("=============================================================================================")
@@ -50,9 +53,9 @@ X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(
 
 #votingClassifier
 
-decisionTree = DecisionTreeClassifier(max_depth=4)
-knn = KNeighborsClassifier(n_neighbors=7)
-randomForest = RandomForestClassifier(n_estimators=4)
+decisionTree = DecisionTreeClassifier(max_depth=7)
+knn = KNeighborsClassifier()
+randomForest = RandomForestClassifier(n_estimators=10)
 votingClassifier = VotingClassifier(
     estimators=[
         ('dt', decisionTree),
@@ -70,6 +73,10 @@ print('treinando 3')
 randomForest.fit(X_train, Y_train)
 print('voting')
 votingClassifier.fit(X_train, Y_train)
+
+print('voting model', votingClassifier)
+# votingModel = dump(votingClassifier, 'voting_classifier.joblib') 
+votingClassifier = load('voting_classifier.joblib') 
 
 #fazer a verificação com cada um dos modelos também
 
@@ -100,6 +107,23 @@ print(accuracy_score(Y_validation, predictions))
 # plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
 # plt.show()
 print(classification_report(Y_validation, predictions))
+
+print("================== validação ==================")
+predictions = votingClassifier.predict(validate_dataset)
+print('votingClassifier')
+print(Counter(predictions))
+
+# predictions = DecisionTreeClassifier.predict(validate_dataset)
+# print('DecisionTreeClassifier')
+# print(Counter(predictions))
+
+predictions = randomForest.predict(validate_dataset)
+print('randomForest')
+print(Counter(predictions))
+
+predictions = knn.predict(validate_dataset)
+print('knn')
+print(Counter(predictions))
 
 # # Compare Algorithms
 # https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_probas.html

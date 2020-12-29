@@ -2,33 +2,6 @@ import openGroupCsv
 import pandas as pd
 from sklearn.utils import shuffle
 
-columns = [
-    'Flow Duration', 
-    'Fwd IAT Total', 
-    'Bwd IAT Total', 
-    'Fwd IAT Min', 
-    'Bwd IAT Min', 
-    'Fwd IAT Max', 
-    'Bwd IAT Max', 
-    'Fwd IAT Mean', 
-    'Bwd IAT Mean', 
-    'Flow Packets/s',
-    'Flow Bytes/s',
-    'Flow IAT Min',
-    'Flow IAT Max', 
-    'Flow IAT Mean', 
-    'Flow IAT Std', 
-    'Active Min',
-    'Active Mean', 
-    'Active Max', 
-    'Active Std', #importante?
-    'Idle Min', # importante?
-    'Idle Mean', #importante?
-    'Idle Max', #importante?
-    'Idle Std', 
-    'Label'
-]
-
 def percentage(percent, whole):
   return int((percent * whole) / 100.0)
 
@@ -173,15 +146,15 @@ def concatenedToCsv():
     p2p_len = len(temp_concatened_pearToPear.index) - 1
     p2p_quantity_validation = percentage(20, len(temp_concatened_pearToPear.index))
 
-    validate_p2p = pd.DataFrame(temp_concatened_pearToPear.take([0]))
-    validate_p2p = pd.DataFrame(temp_concatened_pearToPear.take([0]))
+    validate_pearToPear = pd.DataFrame(temp_concatened_pearToPear.take([0]))
+    validate_pearToPear = pd.DataFrame(temp_concatened_pearToPear.take([0]))
     for row in range(1, p2p_len):
         if (row > (p2p_len - p2p_quantity_validation)):
-            validate_p2p = validate_p2p.append(temp_concatened_pearToPear.take([row]))
+            validate_pearToPear = validate_pearToPear.append(temp_concatened_pearToPear.take([row]))
         else:
-            concatened_p2p = validate_p2p.append(temp_concatened_pearToPear.take([row]))
-    validate_p2p.dropna(inplace=True)
-    validate_p2p.to_csv('data/validate_p2p.csv', index = False, decimal='.')
+            concatened_pearToPear = validate_pearToPear.append(temp_concatened_pearToPear.take([row]))
+    validate_pearToPear.dropna(inplace=True)
+    validate_pearToPear.to_csv('data/validate_pearToPear.csv', index = False, decimal='.')
 
     # Garbage
     garbage = openGroupCsv.getAllCsvType('garbage')
@@ -238,8 +211,41 @@ def concatenedToCsv():
         ]
     ].copy()
 
+    validate_concatened_dataframe = [validate_streaming, validate_voip, validate_chat, validate_file_transfer, validate_email, validate_pearToPear, validate_garbage]
+    validate_dataset = pd.concat(validate_concatened_dataframe)
+
+    validate_dataset = validate_dataset[
+        [
+            'Flow Duration', 
+            'Fwd IAT Total', 
+            'Bwd IAT Total', 
+            'Fwd IAT Min', 
+            'Bwd IAT Min', 
+            'Fwd IAT Max', 
+            'Bwd IAT Max', 
+            'Fwd IAT Mean', 
+            'Bwd IAT Mean', 
+            'Flow Packets/s',
+            'Flow Bytes/s',
+            'Flow IAT Min',
+            'Flow IAT Max', 
+            'Flow IAT Mean', 
+            'Flow IAT Std', 
+            'Active Min',
+            'Active Mean', 
+            'Active Max', 
+            'Active Std', #importante?
+            'Idle Min', # importante?
+            'Idle Mean', #importante?
+            'Idle Max', #importante?
+            'Idle Std', 
+        ]
+    ].copy()
+
+
     print('cleaning dataset')
     concatened_dataset.dropna(inplace=True) # remove all inf and nan from datagrame
+    validate_dataset.dropna(inplace=True) # remove all inf and nan from datagrame
 
     #ISSO AQUI PODE SERVIR COMO ARGUMENTAÇÃO PARA AS COLUNAS ESCOLHIDAS
     meanLabels = concatened_dataset.groupby('Label').mean().round()
@@ -250,4 +256,5 @@ def concatenedToCsv():
     stdLabels.to_csv(r'statistics/std.csv', index = False, decimal='.')
 
     concatened_dataset.to_csv('concatened_dataset.csv', index = False, decimal='.')
+    validate_dataset.to_csv('validate_dataset.csv', index = False, decimal='.')
     print('generate concatened_dataset has been finished')
