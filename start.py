@@ -21,28 +21,23 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from collections import Counter
 from joblib import dump, load
-
+import sys
 
 # CRIAR SCRIPT PARA INSTALAR TODOS OS PRÉ-REQUISITOS COMO PANDAS, KERAS, SCIKIT ETC
 # CHAMAR O ARQUIVO QUE ABRE O CIC
 # openCic.runCICFlowMeter()
-# teste_csv = pd.read_csv('csv_result-TimeBasedFeatures-Dataset-120s-AllinOne.csv')
-# APÓS FECHAR, ABRIR O ARQUIVO QUE FOI SALVO NA PASTA 'DATA': dataset = pd.read_csv('data/daily/*.csv')
-# ESSE ARQUIVO SERÁ UTILIZADO NO MÉTODO... PORÉM
-# DURANTE O TREINAMENTO PRECISO VER QUAIS COLUNAS VOU UTILIZAR, SENDO ASSIM
-# TALVEZ SE TORNE NECESSÁRIO FAZER UM TRATAMENTO DESSE CSV, EXCLUINDO AS COLUNAS
-# DESNECESSÁRIAS, MUDANDO O LABEL ETC
 
-if (os.path.isfile('concatened_dataset.csv') & os.path.isfile('validate_dataset.csv') ):
-    concatened_dataset = pd.read_csv('concatened_dataset.csv')
-    validate_dataset = pd.read_csv('validate_dataset.csv')
-else:
+if ((not os.path.isfile('concatened_dataset.csv')) & (not os.path.isfile('validate_dataset.csv'))):
     generateDataset.concatenedToCsv()
-    concatened_dataset = pd.read_csv('concatened_dataset.csv')
 
+concatened_dataset = pd.read_csv('concatened_dataset.csv')
+validate_dataset = pd.read_csv('validate_dataset.csv')
 
+print("Gerando datasets para segundo caso de teste")
+generateDataset.secondCaseTest()
+second_case_test_concatened_dataset = pd.read_csv('second_case_test_concatened_dataset.csv')
+second_case_test_validate_dataset = pd.read_csv('second_case_test_validate_dataset.csv')
 print("=============================================================================================")
-
 
 array = concatened_dataset.values
 # print(array)
@@ -74,9 +69,8 @@ randomForest.fit(X_train, Y_train)
 print('voting')
 votingClassifier.fit(X_train, Y_train)
 
-print('voting model', votingClassifier)
-# votingModel = dump(votingClassifier, 'voting_classifier.joblib') 
-votingClassifier = load('voting_classifier.joblib') 
+# votingModel = dump(votingClassifier, 'second_case_test_voting_classifier.joblib') 
+votingClassifier = load('first_case_test_voting_classifier.joblib') 
 
 #fazer a verificação com cada um dos modelos também
 
@@ -108,22 +102,102 @@ print(accuracy_score(Y_validation, predictions))
 # plt.show()
 print(classification_report(Y_validation, predictions))
 
-print("================== validação ==================")
-predictions = votingClassifier.predict(validate_dataset)
-print('votingClassifier')
+print("================== validação do primeiro caso de teste ==================")
+
+predictions = decisionTree.predict(validate_dataset)
+print('\nDecisionTreeClassifier')
 print(Counter(predictions))
 
-# predictions = DecisionTreeClassifier.predict(validate_dataset)
-# print('DecisionTreeClassifier')
-# print(Counter(predictions))
-
 predictions = randomForest.predict(validate_dataset)
-print('randomForest')
+print('\nrandomForest')
 print(Counter(predictions))
 
 predictions = knn.predict(validate_dataset)
-print('knn')
+print('\nknn')
 print(Counter(predictions))
+
+predictions = votingClassifier.predict(validate_dataset)
+print('\nvotingClassifier')
+print(Counter(predictions))
+
+
+
+
+###################
+array = second_case_test_concatened_dataset.values
+# print(array)
+x = array[:,0:4]        # list slicing for attributes. [start:stop:step], def step = 1. in this case [from start:until last instance (,0 until last first col):step = 4 (4 columns to copy and skip last column)]
+y = array[:,4]          # list slice for class column
+
+X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(x, y, test_size=0.25, random_state=0)
+
+#votingClassifier
+
+decisionTree = DecisionTreeClassifier(max_depth=7)
+knn = KNeighborsClassifier()
+randomForest = RandomForestClassifier(n_estimators=10)
+votingClassifier = VotingClassifier(
+    estimators=[
+        ('dt', decisionTree),
+        ('knn', knn),
+        ('rf', randomForest)
+    ],
+    voting='soft', weights=[1, 2, 1]
+)
+
+print('treinando 1')
+decisionTree.fit(X_train, Y_train)
+print('treinando 2')
+knn.fit(X_train, Y_train)
+print('treinando 3')
+randomForest.fit(X_train, Y_train)
+print('voting')
+votingClassifier.fit(X_train, Y_train)
+
+
+# votingModel = dump(votingClassifier, 'second_case_test_voting_classifier.joblib') 
+votingClassifier = load('second_case_test_voting_classifier.joblib') 
+###################
+
+print("================== validação do segundo caso de teste ==================")
+
+predictions = decisionTree.predict(second_case_test_validate_dataset)
+print('\nDecisionTreeClassifier')
+print(Counter(predictions))
+
+predictions = randomForest.predict(second_case_test_validate_dataset)
+print('\nrandomForest')
+print(Counter(predictions))
+
+predictions = knn.predict(second_case_test_validate_dataset)
+print('\nknn')
+print(Counter(predictions))
+
+predictions = votingClassifier.predict(second_case_test_validate_dataset)
+print('\nvotingClassifier')
+print(Counter(predictions))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # # Compare Algorithms
 # https://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_probas.html
@@ -221,44 +295,3 @@ print(Counter(predictions))
 #   if predictions != Y_validation:
 #     print('Row', row_index, 'has been classified as ', predictions, 'and should be ', Y_validation)
 #     print(X_validation[row_index]);
-
-# pop = pd.read_csv('data/daily/2020-10-09_Flow.csv')
-# pop = pop[
-#     [
-#         'Flow Duration',
-#         'Fwd IAT Total',
-#         'Bwd IAT Total',
-#         'Fwd IAT Min',
-#         'Bwd IAT Min',
-#         'Fwd IAT Max',
-#         'Bwd IAT Max',
-#         'Fwd IAT Mean',
-#         'Bwd IAT Mean',
-#         'Flow Packets/s',
-#         'Flow Bytes/s',
-#         'Flow IAT Min',
-#         'Flow IAT Max',
-#         'Flow IAT Mean',
-#         'Flow IAT Std',
-#         'Active Min',
-#         'Active Mean',
-#         'Active Max',
-#         'Active Std',
-#         'Idle Min',
-#         'Idle Mean',
-#         'Idle Max',
-#         'Idle Std',
-#     ]
-# ].copy()
-
-# pop.to_csv(r'pop.csv', index = False, decimal='.')
-
-# predictions_test = clf.predict(pop)
-# index = 2
-# for result in predictions_test:
-#     print("{} : {}".format(index, result))
-#     index += 1
-
-
-# print(test.mean())
-# test.to_csv(r'test.csv', index = False, decimal='.')

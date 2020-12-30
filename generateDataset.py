@@ -5,6 +5,32 @@ from sklearn.utils import shuffle
 def percentage(percent, whole):
   return int((percent * whole) / 100.0)
 
+def secondCaseTest():
+    concatened_dataset = pd.read_csv('concatened_dataset.csv')
+    validate_dataset = pd.read_csv('validate_dataset.csv')
+
+    columns_train = [
+            'Idle Min', # importante?
+            'Idle Mean', #importante?
+            'Idle Max', #importante?
+            'Idle Std', 
+            'Label'
+    ]
+
+    columns_validate = [
+        'Idle Min', # importante?
+        'Idle Mean', #importante?
+        'Idle Max', #importante?
+        'Idle Std'
+    ]
+
+    concatened_dataset = concatened_dataset[columns_train].copy()
+    validate_dataset = validate_dataset[columns_validate].copy()
+
+    concatened_dataset.to_csv('second_case_test_concatened_dataset.csv', index = False, decimal='.')
+    validate_dataset.to_csv('second_case_test_validate_dataset.csv', index = False, decimal='.')
+
+
 def concatenedToCsv():
     print('Starting generate concatened_dataset')
     # 1 = EMAIL
@@ -36,7 +62,7 @@ def concatenedToCsv():
         if (row > (streaming_len - streaming_quantity_validation)):
             validate_streaming = validate_streaming.append(temp_concatened_streaming.take([row]))
         else:
-            concatened_streaming = validate_streaming.append(temp_concatened_streaming.take([row]))
+            concatened_streaming = concatened_streaming.append(temp_concatened_streaming.take([row]))
 
     validate_streaming.dropna(inplace=True)
     validate_streaming.to_csv('data/validate_streaming.csv', index = False, decimal='.')
@@ -57,12 +83,12 @@ def concatenedToCsv():
     chat_quantity_validation = percentage(20, len(temp_concatened_chat.index))
 
     validate_chat = pd.DataFrame(temp_concatened_chat.take([0]))
-    validate_chat = pd.DataFrame(temp_concatened_chat.take([0]))
+    concatened_chat = pd.DataFrame(temp_concatened_chat.take([0]))
     for row in range(1, chat_len):
         if (row > (chat_len - chat_quantity_validation)):
             validate_chat = validate_chat.append(temp_concatened_chat.take([row]))
         else:
-            concatened_chat = validate_chat.append(temp_concatened_chat.take([row]))
+            concatened_chat = concatened_chat.append(temp_concatened_chat.take([row]))
     validate_chat.dropna(inplace=True)
     validate_chat.to_csv('data/validate_chat.csv', index = False, decimal='.')
 
@@ -81,12 +107,12 @@ def concatenedToCsv():
     voip_quantity_validation = percentage(20, len(temp_concatened_voip.index))
 
     validate_voip = pd.DataFrame(temp_concatened_voip.take([0]))
-    validate_voip = pd.DataFrame(temp_concatened_voip.take([0]))
+    concatened_voip = pd.DataFrame(temp_concatened_voip.take([0]))
     for row in range(1, voip_len):
         if (row > (voip_len - voip_quantity_validation)):
             validate_voip = validate_voip.append(temp_concatened_voip.take([row]))
         else:
-            concatened_voip = validate_voip.append(temp_concatened_voip.take([row]))
+            concatened_voip = concatened_voip.append(temp_concatened_voip.take([row]))
     validate_voip.dropna(inplace=True)
     validate_voip.to_csv('data/validate_voip.csv', index = False, decimal='.')
 
@@ -102,12 +128,12 @@ def concatenedToCsv():
     email_quantity_validation = percentage(20, len(temp_concatened_email.index))
 
     validate_email = pd.DataFrame(temp_concatened_email.take([0]))
-    validate_email = pd.DataFrame(temp_concatened_email.take([0]))
+    concatened_email = pd.DataFrame(temp_concatened_email.take([0]))
     for row in range(1, email_len):
         if (row > (email_len - email_quantity_validation)):
             validate_email = validate_email.append(temp_concatened_email.take([row]))
         else:
-            concatened_email = validate_email.append(temp_concatened_email.take([row]))
+            concatened_email = concatened_email.append(temp_concatened_email.take([row]))
     validate_email.dropna(inplace=True)
     validate_email.to_csv('data/validate_email.csv', index = False, decimal='.')
 
@@ -126,12 +152,12 @@ def concatenedToCsv():
     file_transfer_quantity_validation = percentage(20, len(temp_concatened_file_transfer.index))
 
     validate_file_transfer = pd.DataFrame(temp_concatened_file_transfer.take([0]))
-    validate_file_transfer = pd.DataFrame(temp_concatened_file_transfer.take([0]))
+    concatened_file_transfer = pd.DataFrame(temp_concatened_file_transfer.take([0]))
     for row in range(1, file_transfer_len):
         if (row > (file_transfer_len - file_transfer_quantity_validation)):
             validate_file_transfer = validate_file_transfer.append(temp_concatened_file_transfer.take([row]))
         else:
-            concatened_file_transfer = validate_file_transfer.append(temp_concatened_file_transfer.take([row]))
+            concatened_file_transfer = concatened_file_transfer.append(temp_concatened_file_transfer.take([row]))
     validate_file_transfer.dropna(inplace=True)
     validate_file_transfer.to_csv('data/validate_file_transfer.csv', index = False, decimal='.')
 
@@ -147,12 +173,12 @@ def concatenedToCsv():
     p2p_quantity_validation = percentage(20, len(temp_concatened_pearToPear.index))
 
     validate_pearToPear = pd.DataFrame(temp_concatened_pearToPear.take([0]))
-    validate_pearToPear = pd.DataFrame(temp_concatened_pearToPear.take([0]))
+    concatened_pearToPear = pd.DataFrame(temp_concatened_pearToPear.take([0]))
     for row in range(1, p2p_len):
         if (row > (p2p_len - p2p_quantity_validation)):
             validate_pearToPear = validate_pearToPear.append(temp_concatened_pearToPear.take([row]))
         else:
-            concatened_pearToPear = validate_pearToPear.append(temp_concatened_pearToPear.take([row]))
+            concatened_pearToPear = concatened_pearToPear.append(temp_concatened_pearToPear.take([row]))
     validate_pearToPear.dropna(inplace=True)
     validate_pearToPear.to_csv('data/validate_pearToPear.csv', index = False, decimal='.')
 
@@ -167,12 +193,12 @@ def concatenedToCsv():
     garbage_quantity_validation = percentage(20, len(temp_concatened_garbage.index))
 
     validate_garbage = pd.DataFrame(temp_concatened_garbage.take([0]))
-    validate_garbage = pd.DataFrame(temp_concatened_garbage.take([0]))
+    concatened_garbage = pd.DataFrame(temp_concatened_garbage.take([0]))
     for row in range(1, garbage_len):
         if (row > (garbage_len - garbage_quantity_validation)):
             validate_garbage = validate_garbage.append(temp_concatened_garbage.take([row]))
         else:
-            concatened_garbage = validate_garbage.append(temp_concatened_garbage.take([row]))
+            concatened_garbage = concatened_garbage.append(temp_concatened_garbage.take([row]))
     validate_garbage.dropna(inplace=True)
     validate_garbage.to_csv('data/validate_garbage.csv', index = False, decimal='.')
 
