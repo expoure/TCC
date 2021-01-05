@@ -1,5 +1,4 @@
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier, RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from scipy.io import arff
 import pandas as pd
 from pandas.plotting import scatter_matrix
@@ -7,17 +6,11 @@ import openCICFlowMeter as openCic
 import openGroupCsv
 import generateDataset
 import os
-import rampwf as rw
-from sklearn.model_selection import StratifiedShuffleSplit
 import matplotlib.pyplot as plt
 from sklearn import model_selection
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, plot_confusion_matrix
-from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from collections import Counter
 from joblib import dump, load
@@ -159,6 +152,34 @@ votingClassifier.fit(X_train, Y_train)
 votingClassifier = load('second_case_test_voting_classifier.joblib') 
 ###################
 
+print("Validando com DecisionTreeClassifier")
+predictions = decisionTree.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+# plot_confusion_matrix(decisionTree, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+
+print("Validando com KNeighborsClassifier")
+predictions = knn.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+# plot_confusion_matrix(knn, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+
+print("Validando com RandomForestClassifier")
+predictions = randomForest.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+# plot_confusion_matrix(randomForest, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+
+print("Validando com voting")
+predictions = votingClassifier.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+# plot_confusion_matrix(votingClassifier, X_validation, Y_validation)
+# plt.show()
+print(classification_report(Y_validation, predictions))
+
 print("================== validação do segundo caso de teste ==================")
 
 predictions = decisionTree.predict(second_case_test_validate_dataset)
@@ -291,7 +312,7 @@ print(Counter(predictions))
 # print(predictions);
 #TERMINA AQUI COMO ESTAVA ANTES DE TESTAR O VOTING
 
-# for row_index, (input, predictions, Y_validation) in enumerate(zip (X_validation, predictions, Y_validation)):
+# for row_index, (iut, predictions, Y_validation) in enumerate(zip (X_validation, predictions, Y_validation)):
 #   if predictions != Y_validation:
 #     print('Row', row_index, 'has been classified as ', predictions, 'and should be ', Y_validation)
 #     print(X_validation[row_index]);
